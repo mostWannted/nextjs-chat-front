@@ -24,8 +24,6 @@ export const ContextProvider = ({ children }) => {
         setPassword,
         phone,
         setPhone,
-        token, // Добавленное состояние токена
-        setToken, // Добавленная функция для установки токена
     };
 
     return <Context.Provider value={value}>{children}</Context.Provider>;

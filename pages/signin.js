@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { setCookie } from 'js-cookie';
 
 const Signin = () => {
     const [login, setLogin] = useState("");
@@ -9,28 +8,21 @@ const Signin = () => {
     const [error, setError] = useState("");
     const router = useRouter();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-
         const userData = {
             login:login,
             password:password
         };
-
-        axios
-            .post("https://ya-praktikum.tech/api/v2/auth/signin", userData)
-            .then((response) => {
-                console.log(response.data);
-
-                // Сохраняем токен в куки
-                setCookie('token', response.data.token, { path: '/' });
-
-                router.push("/chats");
-            })
+        const response = await axios.post("https://ya-praktikum.tech/api/v2/auth/signin", userData,{ withCredentials: true })
             .catch((error) => {
                 console.log(error);
                 setError("Invalid login or password");
             });
+        if(response) {
+            console.log(response.headers);
+            await router.push("/chats");
+        }
     };
 
     return (

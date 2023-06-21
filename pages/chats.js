@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {getCookie} from 'js-cookie';
+import { useRouter } from "next/router";
 
 const Chats = () => {
     const [chats, setChats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [message, setMessage] = useState("");
-    const token = getCookie("token");
+    const [token, setToken] = useState("");
+
+    const router = useRouter();
 
     useEffect(() => {
         fetchChats();
+        setToken(getCookie('token'));
     }, []);
+
+    const getCookie = (name) => {
+        const cookie = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return cookie ? cookie[2] : null;
+    }
 
     const fetchChats = async () => {
         try {
-            const response = await axios.get("/api/chats", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const response = await axios.get("https://ya-praktikum.tech/api/v2/chats", {withCredentials:true
+
             });
             setChats(response.data);
             setLoading(false);
@@ -30,10 +36,7 @@ const Chats = () => {
 
     const createChat = async (chatData) => {
         try {
-            const response = await axios.post("/api/chats", chatData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+            const response = await axios.post("https://ya-praktikum.tech/api/v2/chats", chatData, {withCredentials:true
             });
             setChats([...chats, response.data]);
         } catch (error) {
@@ -86,7 +89,7 @@ const Chats = () => {
     const handleCreateChat = (e) => {
         e.preventDefault();
         const chatData = {
-            name: e.target.name.value,
+            title: e.target.name.value,
         };
         createChat(chatData);
         e.target.reset();
