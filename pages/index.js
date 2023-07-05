@@ -28,7 +28,7 @@ const Auth = () => {
             .post("https://ya-praktikum.tech/api/v2/auth/signup", userData)
             .then((response) => {
                 console.log(response.data);
-                router.push("/welcome");
+                router.push("/chats");
             })
             .catch((error) => {
                 console.log(error);
